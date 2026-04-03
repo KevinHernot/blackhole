@@ -1,0 +1,3 @@
+{"id":"qc-001","task":"retrieval_qa","domain":"docs","prompt":"Summarize the portal-attention idea and explain why it helps long mixed-context prompts."}
+{"id":"qc-002","task":"code_reasoning","domain":"code","prompt":"Explain which Blackhole pillar most directly reduces layer-to-layer transport and why."}
+{"id":"qc-003","task":"multi_domain","domain":"mixed","prompt":"Compare Semantic PVS, Procedural Weights, and Token Merging in one answer without losing the role of turbo4 as the baseline."}
