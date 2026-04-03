@@ -118,6 +118,32 @@ These pillars are meant to be **additive, not redundant**:
 
 Together they attack five different forms of the same underlying enemy: unnecessary bytes moving through the system.
 
+## Prior art: the five pillars in the literature
+
+The five pillars have already been researched — individually, and sometimes under different names. What follows is an honest mapping of each pillar against existing published work, along with what we believe remains genuinely novel in each case.
+
+### Semantic PVS — already explored, and quite strongly
+
+RetrievalAttention replaces dense long-context access with vector search inside the KV cache and reports needing only about 1–3 % of the data consulted; Squeezed Attention compresses a fixed context offline via clustering and then only consults keys deemed important; H2O, LazyLLM and DynamicKV select or retain only the most useful tokens/KV entries. So the "what to look at" question already exists clearly as semantic/dynamic context culling. The still-novel angle, in our view, is a semantic PVS that is genuinely **pre-computed and reusable** per state, tool, corpus or tenant — rather than a selection that is mostly recomputed on the fly.
+
+### Portal Attention — already explored as well
+
+Routing Transformer already does content-based sparse routing via online k-means; NSA combines coarse-grain compression with fine-grained selection; DHSA segments the context into variable-length chunks and only computes attention on relevant chunk pairs; Squeezed Attention also has a hierarchical variant. So the "how to access it" question via coarse-to-fine routing is well represented in the literature. What remains less explored, in our opinion, is the true **"portal graph"** version: an explicit, persistent graph of memory regions / tools / experts with pre-computed adjacency and admissibility — the way a game engine builds its portal topology.
+
+### Predictive Transport — already explored, very concretely at the systems level
+
+SpeCache speculatively predicts which KV pairs will be consulted at the next step and prefetches them; PRESERVE prefetches weights and KV during communication phases; Strata organises a hierarchical context cache with GPU-assisted I/O and cache-aware scheduling; NVIDIA Dynamo documents non-blocking KV transfer directly from VRAM to VRAM in disaggregated serving. So the "when to move data" question is already an active serving topic. Where room remains is in a **semantic predictive transport** guided by agent trajectory, tool plan, or expert route — not merely by cache and I/O heuristics.
+
+### Procedural Weights — already explored, but the most fragmented of the five
+
+LoRA-Flow learns dynamic fusion weights between LoRAs; CoDA adds conditional adapters with sparse activation and reports inference gains; SHINE generates LoRAs from context in a single forward pass; DynMoE and "Harder Task Needs More Experts" vary the number of activated experts; Dr.LLM dynamically routes layers via skip / execute / repeat. So the "with what capacity to compute" idea is well present, but scattered across adaptation, conditional computation, MoE and layer routing. In the papers we have verified, it is not yet a **unified serving primitive** — it is rather a set of specialised mechanisms.
+
+### Token Merging / Greedy Meshing — already explored, but mainly in vision/MLLM; in text AR it is more emergent
+
+ToMe established token merging in vision Transformers; AIM and AdaptMerge do inference-time merging/pruning for MLLMs; QuickMerge++ explicitly pushes token merging toward autoregressive next-token prediction on text/image/video. So the "don't keep every primitive independent" idea already exists. The genuinely open space, in our view, is **structure-aware textual greedy meshing**: fusing adjacent spans/tokens while preserving causality, syntax and provenance — not just embedding similarity.
+
+---
+
 ## Current Python PoC behavior
 
 The current NumPy proof of concept is intentionally narrower and more explicit than the higher-level idea story above.
