@@ -25,6 +25,22 @@ The repo now also has the first measured-eval plumbing beyond pure proxies:
 
 That measured-eval plumbing is meant to meet `blackhole_runtime` halfway: this repo should be the algorithm, analysis and artifact-validation side, while real runtime-produced captures and benchmark traces can come from the sibling runtime workspace.
 
+Blackhole still reads best as a stack of additive improvements on top of standard `q8_0`: the routing and locality pillars move the speed and retrieval story, while the quality sections now declare their source explicitly as proxy scenario-model outputs.
+
+## Key Metrics of the python proof-of-concept benchmark — Full Blackhole vs q8_0
+
+| Metric | q8_0 | full Blackhole | Delta |
+| --- | --- | --- | --- |
+| Prefill speed proxy | 1.00x | 4.21x | 4.21x |
+| MoE decode proxy | 1.00x | 2.70x | 2.70x |
+| Transport speed proxy | 1.00x | 3.16x | 3.16x |
+| NIAH single-needle expected accuracy | 79.7% | 88.4% | +8.7 pts |
+| NIAH multi-key expected accuracy | 75.7% | 89.8% | +14.2 pts |
+| NIAH multi-value expected accuracy | 71.0% | 88.9% | +17.9 pts |
+| KL drift vs f16 | 0.0029 | 0.0006 | -0.0023 |
+| Long-context perplexity | 8.01 | 7.64 | -0.37 |
+| Compression frontier vs q8_0 | 1.00x | 1.49x | +0.49x |
+
 > **📊 Full results are in [`docs/results.md`](./docs/results.md)** — detailed tables, heatmaps and analysis.
 > **💡 New: read the [accessible result summary](./docs/result_summary.md)** for a plain-language explanation of why these benchmarks matter.
 > **🗂️ Docs index: [`docs/readme.md`](./docs/readme.md)** — overview of generated artifacts and where each document fits.
