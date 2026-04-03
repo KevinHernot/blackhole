@@ -22,12 +22,6 @@ Evidence tiers in this repo are intentionally split into `proxy`, `measured_offl
 This is the stitched-together Blackhole story: every row uses the same q8_0-primary ladder, and every delta is explained relative to the same standard q8_0 baseline.
 
 ### Top-of-Tree Results
-Full proof-of-concept ladder comparing every Blackhole configuration against standard q8_0.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: compression, speed proxy, quality proxy, note
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 | Configuration | Compression | Prefill proxy | MoE decode proxy | NIAH proxy | Transport proxy | Quality proxy | Why it improves q8_0 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -61,12 +55,6 @@ Takeaway: q8_0 is the common compressed baseline. Blackhole is not a different b
 Scenario: a 3-domain prompt where standard q8_0 keeps the full routed window live, while Portal Attention shrinks the active KV working set to sinks + bridge + active domain.
 
 ### Prefill Context Scaling (Verified 2K-32K)
-Portal and routing ideas are presented as direct improvements on top of the standard q8_0 prefill story.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: active KV, prefill proxy, vs q8_0
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 | Configuration | Active KV tokens | KV reduction | Prefill speed proxy | vs q8_0 | Why it improves q8_0 |
 | --- | --- | --- | --- | --- | --- |
@@ -86,12 +74,6 @@ Takeaway: standard q8_0 is already a strong compressed baseline, but Blackhole s
 Scenario: a 16K MoE decode step where standard q8_0 still examines the full routed token set, while Semantic PVS culls entire semantic blocks before value reads begin.
 
 ### Decode Speed — MoE
-Every configuration is shown on the same MoE decode ladder so the gains over q8_0 are explicit.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: active keys, values processed, decode proxy, vs q8_0
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 | Configuration | Active key tokens | Values processed | Compute reduction | Decode proxy | vs q8_0 | Why it improves q8_0 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -111,12 +93,6 @@ Takeaway: standard q8_0 is a strong cache baseline, but Semantic PVS changes *wh
 Scenario: a 128-layer pipeline where standard q8_0 still copies full per-layer payloads, while Predictive Transport ships deltas and lets downstream layers reconstruct the next state.
 
 ### Speed Optimization Journey
-Incremental view of how each Blackhole pillar improves the standard q8_0 architecture.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: speed proxy, vs q8_0, incremental note
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 | Configuration | Transported volume | Reduction vs f16 | Speed proxy vs q8_0 | Why it improves q8_0 |
 | --- | --- | --- | --- | --- |
@@ -136,12 +112,6 @@ Takeaway: standard q8_0 already moves less state than fp16, but Predictive Trans
 Scenario: dense decode at increasing context lengths, with standard q8_0 as the gating baseline and Blackhole variants showing how much more inactive value mass can be skipped safely.
 
 ### Decode Speed — Dense
-Dense-model proof of concept showing how each Blackhole pillar changes the q8_0 decode budget.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: skip leverage, decode proxy, vs q8_0
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 | Configuration | 512 | 2K | 4K | 8K | 16K | 32K | Average | vs q8_0 | Why it improves q8_0 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -170,12 +140,6 @@ Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 +
 Scenario: Adapting 3D rendering 'Greedy Meshing' to LLMs. Instead of just shrinking the bit-depth of the cache, we geometrically merge redundant adjacent tokens to shrink the sequence length.
 
 ### Sequence Compression — Greedy Meshing
-Token Merging proof of concept mapping 3D greedy meshing to sequence reduction.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: original length, merged length, sequence reduction, speed proxy, vs q8_0
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 | Configuration | Original length | Merged length | Sequence reduction | Prefill proxy | vs q8_0 | Why it improves q8_0 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -197,12 +161,6 @@ Source artifact: `niah_results_poc/niah_single_20260401_163422.md`
 Mode: single | Seed: 42 | 2026-04-01 16:34 UTC
 
 ### NIAH Retrieval
-Retrieval proofs of concept compare the full Blackhole ladder instead of hiding behind runtime subsets.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: blocks scanned, needles routed, vs q8_0, note
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 Any hit/miss examples below are illustrative deterministic draws from the scenario model.
 All ranking tables and average-accuracy summaries use expected hit rates from `retrieval_probability()` so the retrieval story is not driven by single-sample noise.
@@ -371,12 +329,6 @@ Source artifact: `niah_results_poc/niah_multi-key_20260401_163422.md`
 Mode: multi-key | Seed: 42 | 2026-04-01 16:34 UTC
 
 ### NIAH Retrieval
-Retrieval proofs of concept compare the full Blackhole ladder instead of hiding behind runtime subsets.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: blocks scanned, needles routed, vs q8_0, note
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 Any hit/miss examples below are illustrative deterministic draws from the scenario model.
 All ranking tables and average-accuracy summaries use expected hit rates from `retrieval_probability()` so the retrieval story is not driven by single-sample noise.
@@ -414,12 +366,6 @@ Source artifact: `niah_results_poc/niah_multi-value_20260401_163422.md`
 Mode: multi-value | Seed: 42 | 2026-04-01 16:34 UTC
 
 ### NIAH Retrieval
-Retrieval proofs of concept compare the full Blackhole ladder instead of hiding behind runtime subsets.
-Proof-of-concept ladder: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
-Primary metrics: blocks scanned, needles routed, vs q8_0, note
-Common baseline: q8_0
-Measurement model: deterministic scenario-model proxies, not measured runtime execution.
-Script coverage: f16, q8_0, q8_0 + Semantic PVS, q8_0 + Portal Attention, q8_0 + Predictive Transport, q8_0 + Procedural Weights, q8_0 + Token Merging, blackhole (q8_0 + all 5)
 
 Any hit/miss examples below are illustrative deterministic draws from the scenario model.
 All ranking tables and average-accuracy summaries use expected hit rates from `retrieval_probability()` so the retrieval story is not driven by single-sample noise.
